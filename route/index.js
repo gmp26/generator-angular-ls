@@ -9,8 +9,8 @@ module.exports = Generator;
 
 function Generator() {
   ScriptBase.apply(this, arguments);
-  this.hookFor('angular:controller');
-  this.hookFor('angular:view');
+  this.hookFor('angular-ls:controller');
+  this.hookFor('angular-ls:view');
 }
 util.inherits(Generator, ScriptBase);
 
@@ -26,7 +26,18 @@ Generator.prototype.rewriteAppJs = function () {
       ]
     });
   }
-  else {
+  else if (this.env.options.ls) {
+    angularUtils.rewriteFile({
+      file: path.join(this.env.options.appPath, 'scripts/app.ls'),
+      needle: '.otherwise',
+      splicable: [
+        '.when \'/' + this.name + '\',',
+        '  templateUrl: \'views/' + this.name + '.html\',',
+        '  controller: \'' + this._.classify(this.name) + 'Ctrl\''
+      ]
+    });
+  }
+ else {
     angularUtils.rewriteFile({
       file: path.join(this.env.options.appPath, 'scripts/app.js'),
       needle: '.otherwise',

@@ -36,21 +36,34 @@ var Generator = module.exports = function Generator(args, options) {
     this.env.options.coffee = this.options.coffee;
   }
 
+  if (typeof this.env.options.ls === 'undefined') {
+    this.option('ls');
+
+    // attempt to detect if user is using CS or not
+    // if cml arg provided, use that; else look for the existence of cs
+    if (!this.options.ls &&
+      this.expandFiles(path.join(this.appPath, '/scripts/**/*.ls'), {}).length > 0) {
+      this.options.ls = true;
+    }
+
+    this.env.options.ls = this.options.ls;
+  }
+
   if (typeof this.env.options.minsafe === 'undefined') {
     this.option('minsafe');
     this.env.options.minsafe = this.options.minsafe;
     args.push('--minsafe');
   }
 
-  this.hookFor('angular:common', {
+  this.hookFor('angular-ls:common', {
     args: args
   });
 
-  this.hookFor('angular:main', {
+  this.hookFor('angular-ls:main', {
     args: args
   });
 
-  this.hookFor('angular:controller', {
+  this.hookFor('angular-ls:controller', {
     args: args
   });
 

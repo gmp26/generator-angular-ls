@@ -36,6 +36,14 @@ module.exports = function (grunt) {
       coffeeTest: {
         files: ['test/spec/{,*/}*.coffee'],
         tasks: ['coffee:test']
+      },
+      ls: {
+        files: ['<%%= yeoman.app %>/scripts/{,*/}*.ls'],
+        tasks: ['lsc:dist']
+      },
+      lsTest: {
+        files: ['test/spec/{,*/}*.ls'],
+        tasks: ['lsc:test']
       },<% if (compassBootstrap) { %>
       compass: {
         files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
@@ -155,6 +163,31 @@ module.exports = function (grunt) {
           ext: '.js'
         }]
       }
+    },
+    lsc: {
+      options: {
+        // sourceMap: true,
+        // sourceRoot: ''
+        bare: true
+      },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%%= yeoman.app %>/scripts',
+          src: '{,*/}*.ls',
+          dest: '.tmp/scripts',
+          ext: '.js'
+        }]
+      },
+      test: {
+        files: [{
+          expand: true,
+          cwd: 'test/spec',
+          src: '{,*/}*.ls',
+          dest: '.tmp/spec',
+          ext: '.js'
+        }]
+      }
     },<% if (compassBootstrap) { %>
     compass: {
       options: {
@@ -261,6 +294,9 @@ module.exports = function (grunt) {
         }]
       }
     },
+
+    /* this comment restores sublime js syntax highlighting */
+
     // Put files not handled in other tasks here
     copy: {
       dist: {
@@ -292,6 +328,7 @@ module.exports = function (grunt) {
         src: '{,*/}*.css'
       }
     },
+    /* temporary deletion pending an option prompt for lsc/coffee 
     concurrent: {
       server: [
         'coffee:dist',<% if (compassBootstrap) { %>
@@ -305,6 +342,27 @@ module.exports = function (grunt) {
       ],
       dist: [
         'coffee',<% if (compassBootstrap) { %>
+        'compass:dist',<% } %>
+        'copy:styles',
+        'imagemin',
+        'svgmin',
+        'htmlmin'
+      ]
+    },
+    */
+    concurrent: {
+      server: [
+        'lsc:dist',<% if (compassBootstrap) { %>
+        'compass:server',<% } %>
+        'copy:styles'
+      ],
+      test: [
+        'lsc',<% if (compassBootstrap) { %>
+        'compass',<% } %>
+        'copy:styles'
+      ],
+      dist: [
+        'lsc',<% if (compassBootstrap) { %>
         'compass:dist',<% } %>
         'copy:styles',
         'imagemin',

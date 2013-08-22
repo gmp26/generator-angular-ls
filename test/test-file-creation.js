@@ -25,7 +25,7 @@ describe('Angular generator', function () {
       if (err) {
         done(err);
       }
-      angular = helpers.createGenerator('angular:app', deps);
+      angular = helpers.createGenerator('angular-ls:app', deps);
       angular.options['skip-install'] = true;
       done();
     });
@@ -101,11 +101,40 @@ describe('Angular generator', function () {
     });
   });
 
+  it('creates livescript files', function (done) {
+    var expected = ['app/.htaccess',
+                    'app/404.html',
+                    'app/favicon.ico',
+                    'app/robots.txt',
+                    'app/styles/main.css',
+                    'app/views/main.html',
+                    ['.bowerrc', /"directory": "app\/bower_components"/],
+                    'Gruntfile.js',
+                    'package.json',
+                    ['bower.json', /"name":\s+"temp"/],
+                    'app/scripts/app.ls',
+                    'app/index.html',
+                    'app/scripts/controllers/main.ls',
+                    'test/spec/controllers/main.ls'
+                    ];
+    helpers.mockPrompt(angular, {
+      bootstrap: true,
+      compassBoostrap: true,
+      modules: []
+    });
+
+    angular.env.options.ls = true;
+    angular.run([], function () {
+      helpers.assertFiles(expected);
+      done();
+    });
+  });
+
   describe('Controller', function () {
     it('should generate a new controller', function (done) {
       var angularCtrl;
       var deps = ['../../controller'];
-      angularCtrl = helpers.createGenerator('angular:controller', deps, ['foo']);
+      angularCtrl = helpers.createGenerator('angular-ls:controller', deps, ['foo']);
 
       helpers.mockPrompt(angular, {
         bootstrap: true,
@@ -128,7 +157,7 @@ describe('Angular generator', function () {
     it('should generate a new view', function (done) {
       var angularView;
       var deps = ['../../view'];
-      angularView = helpers.createGenerator('angular:view', deps, ['foo']);
+      angularView = helpers.createGenerator('angular-ls:view', deps, ['foo']);
 
       helpers.mockPrompt(angular, {
         bootstrap: true,
