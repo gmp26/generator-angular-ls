@@ -67,7 +67,11 @@ var Generator = module.exports = function Generator(args, options) {
     args: args
   });
 
-  this.hookFor('karma', {
+  if(this.options.ls) {
+    this.template('../../templates/common/_karma.conf.js', 'karma.conf.js');
+    this.template('../../templates/common/_karma-e2e.conf.js', 'karma-e2e.conf.js');
+  }
+  else this.hookFor('karma', {
     as: 'app',
     options: {
       options: {

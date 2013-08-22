@@ -53,6 +53,9 @@ function Generator() {
     }
 
     this.env.options.ls = this.options.ls;
+
+    // Make minsafe the default for livescript
+    this.env.options.minsafe = true;
   }
 
   if (typeof this.env.options.minsafe === 'undefined') {
