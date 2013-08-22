@@ -9,6 +9,6 @@ angular.module('<%= _.camelize(appname) %>App')
 
     # Public API here
     {
-      someMethod: () ->
+      someMethod: ->
         meaningOfLife;
     }

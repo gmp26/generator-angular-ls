@@ -7,8 +7,8 @@ angular.module('<%= _.camelize(appname) %>App')
     salutation = 'Hello'
 
     # Private constructor
-    Greeter ->
-      this.greet = () {
+    Greeter = ->
+      this.greet = ->
         salutation
 
     # Public API for configuration
