@@ -101,25 +101,33 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     default: true
   }, {
     type: 'confirm',
-    name: 'compassBootstrap',
-    message: 'Would you like to use the SCSS version of Twitter Bootstrap with the Compass CSS Authoring Framework?',
-    default: false,
-    when: function (props) {
-      return props.bootstrap;
-    }
-  }, {
-    type: 'confirm',
     name: 'lessBootstrap',
     message: 'Would you like to use the less version of Twitter Bootstrap?',
     default: true,
     when: function (props) {
       return props.bootstrap;
     }
+  }, {
+    type: 'confirm',
+    name: 'compassBootstrap',
+    message: 'Would you like to use the SCSS version of Twitter Bootstrap with the Compass CSS Authoring Framework?',
+    default: true,
+    when: function (props) {
+      return props.bootstrap && !props.lessBootstrap;
+    }
+  }, {
+    type: 'confirm',
+    name: 'fontAwesome',
+    message: 'Would you like to use fontAwesome glyphs in Bootstrap?',
+    default: true,
+    when: function (props) {
+      return props.lessBootstrap;
+    }
   }], function (props) {
     this.bootstrap = props.bootstrap;
     this.compassBootstrap = props.compassBootstrap;
     this.lessBootstrap = props.compassBootstrap;
-
+    this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
     cb();
   }.bind(this));
 };
@@ -169,15 +177,31 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
   else
     source += 'css/';
 
+
+  console.log("Ho THERE sass="+sass+ " less="+less);
+
   if (sass) {
     files.push('main.scss');
     this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
     this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');
   }
   else if (less) {
+
     files.push('main.less');
-    this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
-    this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');    
+    if (this.fontAwesome) {
+      // Patch main.less with reference to font-awesome fonts
+      var replaced = '@import "sprites.less";'
+      var replacement = '@import "../../font-awesome/less/font-awesome.less";';
+      var path = source + 'bower-components/bootstrap/less/bootstrap.less';
+      var bstrap = this.read(path);
+      bstrap = bstrap.replace(replaced, replacement);
+      console.log("bstrap path = "+bstrap); 
+      this.write(path, bstrap);
+    }
+    else {
+      this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
+      this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');      
+    }
   } 
   else {
     if (this.bootstrap) {
