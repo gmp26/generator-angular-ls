@@ -103,6 +103,14 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     type: 'confirm',
     name: 'compassBootstrap',
     message: 'Would you like to use the SCSS version of Twitter Bootstrap with the Compass CSS Authoring Framework?',
+    default: false,
+    when: function (props) {
+      return props.bootstrap;
+    }
+  }, {
+    type: 'confirm',
+    name: 'lessBootstrap',
+    message: 'Would you like to use the less version of Twitter Bootstrap?',
     default: true,
     when: function (props) {
       return props.bootstrap;
@@ -110,6 +118,7 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
   }], function (props) {
     this.bootstrap = props.bootstrap;
     this.compassBootstrap = props.compassBootstrap;
+    this.lessBootstrap = props.compassBootstrap;
 
     cb();
   }.bind(this));
@@ -150,14 +159,27 @@ Generator.prototype.askForModules = function askForModules() {
 // Waiting a more flexible solution for #138
 Generator.prototype.bootstrapFiles = function bootstrapFiles() {
   var sass = this.compassBootstrap;
+  var less = this.lessBootstrap;
   var files = [];
-  var source = 'styles/' + ( sass ? 'scss/' : 'css/' );
+  var source = 'styles/';
+  if (sass)
+    source += 'scss/';
+  else if (less)
+    source += 'less/';
+  else
+    source += 'css/';
 
   if (sass) {
     files.push('main.scss');
     this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
     this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');
-  } else {
+  }
+  else if (less) {
+    files.push('main.less');
+    this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
+    this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');    
+  } 
+  else {
     if (this.bootstrap) {
       files.push('bootstrap.css');
     }
@@ -173,7 +195,7 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
     fileType: 'css',
     optimizedPath: 'styles/main.css',
     sourceFileList: files.map(function (file) {
-      return 'styles/' + file.replace('.scss', '.css');
+        return 'styles/' + file.replace(/(\.scss)|(\.less)/, '.css');
     }),
     searchPath: '.tmp'
   });
@@ -185,20 +207,27 @@ Generator.prototype.bootstrapJS = function bootstrapJS() {
   }
 
   // Wire Twitter Bootstrap plugins
+  var pfix = 'bower_components/bootstrap';
+  if( this.lessBootstrap ) {
+    pfix += '/js/bootstrap-';
+  }    
+  else {
+    pfix += '-sass/js/bootstrap-';    
+  }
   this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-    'bower_components/bootstrap-sass/js/bootstrap-affix.js',
-    'bower_components/bootstrap-sass/js/bootstrap-alert.js',
-    'bower_components/bootstrap-sass/js/bootstrap-dropdown.js',
-    'bower_components/bootstrap-sass/js/bootstrap-tooltip.js',
-    'bower_components/bootstrap-sass/js/bootstrap-modal.js',
-    'bower_components/bootstrap-sass/js/bootstrap-transition.js',
-    'bower_components/bootstrap-sass/js/bootstrap-button.js',
-    'bower_components/bootstrap-sass/js/bootstrap-popover.js',
-    'bower_components/bootstrap-sass/js/bootstrap-typeahead.js',
-    'bower_components/bootstrap-sass/js/bootstrap-carousel.js',
-    'bower_components/bootstrap-sass/js/bootstrap-scrollspy.js',
-    'bower_components/bootstrap-sass/js/bootstrap-collapse.js',
-    'bower_components/bootstrap-sass/js/bootstrap-tab.js'
+    pfix + 'affix.js',
+    pfix + 'alert.js',
+    pfix + 'dropdown.js',
+    pfix + 'tooltip.js',
+    pfix + 'modal.js',
+    pfix + 'transition.js',
+    pfix + 'button.js',
+    pfix + 'popover.js',
+    pfix + 'typeahead.js',
+    pfix + 'carousel.js',
+    pfix + 'scrollspy.js',
+    pfix + 'collapse.js',
+    pfix + 'tab.js'
   ]);
 };
 

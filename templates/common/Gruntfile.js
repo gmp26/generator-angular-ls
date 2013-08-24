@@ -19,7 +19,8 @@ module.exports = function (grunt) {
   // configurable paths
   var yeomanConfig = {
     app: 'app',
-    dist: 'dist'
+    dist: 'dist',
+    tmp: '.tmp'
   };
 
   try {
@@ -44,7 +45,12 @@ module.exports = function (grunt) {
       lsTest: {
         files: ['test/spec/{,*/}*.ls'],
         tasks: ['lsc:test']
-      },<% if (compassBootstrap) { %>
+      },<% if (lessBootstrap) { %>
+      recess: {
+        files: ['<%%= yeoman.app %>/styles/{,*/}*.less'],
+        tasks: ['recess']
+      },<% } %>
+      <% if (compassBootstrap) { %>
       compass: {
         files: ['<%%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
@@ -59,8 +65,8 @@ module.exports = function (grunt) {
         },
         files: [
           '<%%= yeoman.app %>/{,*/}*.html',
-          '.tmp/styles/{,*/}*.css',
-          '{.tmp,<%%= yeoman.app %>}/scripts/{,*/}*.js',
+          '<%%= yeoman.tmp %>/styles/{,*/}*.css',
+          '{<%%= yeoman.tmp %>,<%%= yeoman.app %>}/scripts/{,*/}*.js',
           '<%%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
@@ -70,9 +76,9 @@ module.exports = function (grunt) {
       dist: {
         files: [{
           expand: true,
-          cwd: '.tmp/styles/',
+          cwd: '<%%= yeoman.tmp %>/styles/',
           src: '{,*/}*.css',
-          dest: '.tmp/styles/'
+          dest: '<%%= yeoman.tmp %>/styles/'
         }]
       }
     },
@@ -87,7 +93,7 @@ module.exports = function (grunt) {
           middleware: function (connect) {
             return [
               lrSnippet,
-              mountFolder(connect, '.tmp'),
+              mountFolder(connect, yeomanConfig.tmp),
               mountFolder(connect, yeomanConfig.app)
             ];
           }
@@ -97,7 +103,7 @@ module.exports = function (grunt) {
         options: {
           middleware: function (connect) {
             return [
-              mountFolder(connect, '.tmp'),
+              mountFolder(connect, '<%%= yeoman.tmp %>'),
               mountFolder(connect, 'test')
             ];
           }
@@ -129,7 +135,7 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: '<%%= yeoman.tmp %>'
     },
     jshint: {
       options: {
@@ -150,7 +156,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%%= yeoman.app %>/scripts',
           src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
+          dest: '<%%= yeoman.tmp %>/scripts',
           ext: '.js'
         }]
       },
@@ -159,7 +165,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: 'test/spec',
           src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
+          dest: '<%%= yeoman.tmp %>/spec',
           ext: '.js'
         }]
       }
@@ -175,7 +181,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: '<%%= yeoman.app %>/scripts',
           src: '{,*/}*.ls',
-          dest: '.tmp/scripts',
+          dest: '<%%= yeoman.tmp %>/scripts',
           ext: '.js'
         }]
       },
@@ -184,16 +190,29 @@ module.exports = function (grunt) {
           expand: true,
           cwd: 'test/spec',
           src: '{,*/}*.ls',
-          dest: '.tmp/spec',
+          dest: '<%%= yeoman.tmp %>/spec',
           ext: '.js'
         }]
       }
-    },<% if (compassBootstrap) { %>
+    },
+    <% if (lessBootstrap) { %>
+    recess: {
+      dist: {
+        options: {
+          compile: true
+        },
+        files: {
+          '<%%= yeoman.tmp %>/styles/main.css': ['<%%= yeoman.app %>/styles/main.less']
+        }
+      }
+    },
+    <% } %>
+    <% if (compassBootstrap) { %>
     compass: {
       options: {
         sassDir: '<%%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
-        generatedImagesDir: '.tmp/images/generated',
+        cssDir: '<%%= yeoman.tmp %>/styles',
+        generatedImagesDir: '<%%= yeoman.tmp %>/images/generated',
         imagesDir: '<%%= yeoman.app %>/images',
         javascriptsDir: '<%%= yeoman.app %>/scripts',
         fontsDir: '<%%= yeoman.app %>/styles/fonts',
@@ -209,7 +228,8 @@ module.exports = function (grunt) {
           debugInfo: true
         }
       }
-    },<% } %>
+    },
+    <% } %>
     // not used since Uglify task does concat,
     // but still available if needed
     /*concat: {
@@ -267,7 +287,7 @@ module.exports = function (grunt) {
       // dist: {
       //   files: {
       //     '<%%= yeoman.dist %>/styles/main.css': [
-      //       '.tmp/styles/{,*/}*.css',
+      //       '<%%= yeoman.tmp %>/styles/{,*/}*.css',
       //       '<%%= yeoman.app %>/styles/{,*/}*.css'
       //     ]
       //   }
@@ -314,7 +334,7 @@ module.exports = function (grunt) {
           ]
         }, {
           expand: true,
-          cwd: '.tmp/images',
+          cwd: '<%%= yeoman.tmp %>/images',
           dest: '<%%= yeoman.dist %>/images',
           src: [
             'generated/*'
@@ -324,7 +344,7 @@ module.exports = function (grunt) {
       styles: {
         expand: true,
         cwd: '<%%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
+        dest: '<%%= yeoman.tmp %>/styles/',
         src: '{,*/}*.css'
       }
     },
@@ -342,7 +362,7 @@ module.exports = function (grunt) {
       ],
       dist: [
         'coffee',<% if (compassBootstrap) { %>
-        'compass:dist',<% } %>
+        'recess',<% } %>
         'copy:styles',
         'imagemin',
         'svgmin',
@@ -352,18 +372,30 @@ module.exports = function (grunt) {
     */
     concurrent: {
       server: [
-        'lsc:dist',<% if (compassBootstrap) { %>
-        'compass:server',<% } %>
+        'lsc:dist',
+<% if (compassBootstrap) { %>
+        'compass:server',
+<% } else if (lessBootstrap) { %>
+        'recess',
+<% } %>
         'copy:styles'
       ],
       test: [
-        'lsc',<% if (compassBootstrap) { %>
-        'compass',<% } %>
+        'lsc',
+<% if (compassBootstrap) { %>
+        'compass',
+<% } else if (lessBootstrap) { %>
+        'recess',
+<% } %>
         'copy:styles'
       ],
       dist: [
-        'lsc',<% if (compassBootstrap) { %>
-        'compass:dist',<% } %>
+        'lsc',
+<% if (compassBootstrap) { %>
+        'compass',
+<% } else if (lessBootstrap) { %>
+        'recess',
+<% } %>
         'copy:styles',
         'imagemin',
         'svgmin',
