@@ -71,6 +71,27 @@ module.exports = function (grunt) {
         ]
       }
     },
+    "regex-replace": {
+      /* patch bootstrap to use font-awesome */
+      bootsome: {
+        src: ['<%= yeoman.app %>/bower-components/bootstrap/less/bootstrap.less'],
+        actions:[{
+          name: 'font-awesome patch for bootstrap',
+          search: '@import "sprites\.less";',
+          replace: '@import "../../font-awesome/less/font-awesome.less";',
+          flags: 'g'
+        }]
+      },
+      someboot: {
+        src: ['<%= yeoman.app %>/bower-components/font-awesome/less/variables.less'],
+        actions:[{
+          name: 'bootstrap patch for font-awesome',
+          search: '@FontAwesomePath:\s*"\.\.\/font";',
+          replace: '@FontAwesomePath:    "../../bower_components/font-awesome/font";',
+          flags: 'g'
+        }]
+      }
+    },
     autoprefixer: {
       options: ['last 1 version'],
       dist: {
@@ -348,28 +369,6 @@ module.exports = function (grunt) {
         src: '{,*/}*.css'
       }
     },
-    /* temporary deletion pending an option prompt for lsc/coffee 
-    concurrent: {
-      server: [
-        'coffee:dist',<% if (compassBootstrap) { %>
-        'compass:server',<% } %>
-        'copy:styles'
-      ],
-      test: [
-        'coffee',<% if (compassBootstrap) { %>
-        'compass',<% } %>
-        'copy:styles'
-      ],
-      dist: [
-        'coffee',<% if (compassBootstrap) { %>
-        'recess',<% } %>
-        'copy:styles',
-        'imagemin',
-        'svgmin',
-        'htmlmin'
-      ]
-    },
-    */
     concurrent: {
       server: [
         'lsc:dist',
@@ -442,6 +441,7 @@ module.exports = function (grunt) {
     grunt.task.run([
       'clean:server',
       'concurrent:server',
+      'regex-replace',
       'autoprefixer',
       'connect:livereload',
       'open',
@@ -461,6 +461,7 @@ module.exports = function (grunt) {
     'clean:dist',
     'useminPrepare',
     'concurrent:dist',
+    'regex-replace',
     'autoprefixer',
     'concat',
     'copy:dist',

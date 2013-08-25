@@ -126,11 +126,13 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
   }], function (props) {
     this.bootstrap = props.bootstrap;
     this.compassBootstrap = props.compassBootstrap;
-    this.lessBootstrap = props.compassBootstrap;
+    this.lessBootstrap = props.lessBootstrap;
     this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
+    // console.log("sass="+this.compassBootstrap+ " less="+this.lessBootstrap);
     cb();
   }.bind(this));
 };
+
 
 Generator.prototype.askForModules = function askForModules() {
   var cb = this.async();
@@ -176,33 +178,15 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
     source += 'less/';
   else
     source += 'css/';
-
-
   console.log("Ho THERE sass="+sass+ " less="+less);
 
-  if (sass) {
-    files.push('main.scss');
-    this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
-    this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');
+  var mainCss = 'main.' + (sass ? 'scss' : 'less');
+  var images = sass? 'images' : 'img';   
+  if (sass || less) {
+    files.push(mainCss);
+    this.copy('images/glyphicons-halflings.png', 'app/'+images+'/glyphicons-halflings.png');
+    this.copy('images/glyphicons-halflings-white.png', 'app/'+images+'/glyphicons-halflings-white.png');
   }
-  else if (less) {
-
-    files.push('main.less');
-    if (this.fontAwesome) {
-      // Patch main.less with reference to font-awesome fonts
-      var replaced = '@import "sprites.less";'
-      var replacement = '@import "../../font-awesome/less/font-awesome.less";';
-      var path = source + 'bower-components/bootstrap/less/bootstrap.less';
-      var bstrap = this.read(path);
-      bstrap = bstrap.replace(replaced, replacement);
-      console.log("bstrap path = "+bstrap); 
-      this.write(path, bstrap);
-    }
-    else {
-      this.copy('images/glyphicons-halflings.png', 'app/images/glyphicons-halflings.png');
-      this.copy('images/glyphicons-halflings-white.png', 'app/images/glyphicons-halflings-white.png');      
-    }
-  } 
   else {
     if (this.bootstrap) {
       files.push('bootstrap.css');
