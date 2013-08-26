@@ -3,16 +3,16 @@ Maintainer: [Mike Pearson](https://github.com/gmp26)
 
 Based on [angular-generator](https://github.com/yeoman/angular-generator/)
 
+## Provisional Usage
 
-## Usage
+NB: Until things stabilise further I won't publish this as a node module, so to use you will
+have to git clone the repo, cd to it, and run `npm link`.
+The generator will then ge available globally.
 
-DO NOT USE - this does not work yet.
 
-## Future Usage
-
-Install `generator-angular`:
+Install `generator-angular-ls`:
 ```
-npm install -g generator-angular
+npm install -g generator-angular-ls
 ```
 
 Make a new directory, and `cd` into it:
@@ -20,32 +20,35 @@ Make a new directory, and `cd` into it:
 mkdir my-new-project && cd $_
 ```
 
-Run `yo angular`, optionally passing an app name:
+Run `yo angular-ls`, optionally passing an app name. If you want coffeescript or livescript, also
+pass the --coffee or the --ls language flag.
 ```
-yo angular [app-name]
+yo angular-ls [app-name] [(--coffee)|(--ls)]
 ```
 
 ## Generators
 
 Available generators:
 
-* [angular](#app) (aka [angular:app](#app))
-* [angular:controller](#controller)
-* [angular:directive](#directive)
-* [angular:filter](#filter)
-* [angular:route](#route)
-* [angular:service](#service)
-* [angular:decorator] (#decorator)
-* [angular:view](#view)
+* [angular-ls](#app) (aka [angular-ls:app](#app))
+* [angular-ls:controller](#controller)
+* [angular-ls:directive](#directive)
+* [angular-ls:filter](#filter)
+* [angular-ls:route](#route)
+* [angular-ls:service](#service)
+* [angular-ls:decorator] (#decorator)
+* [angular-ls:view](#view)
 
 **Note: Generators are to be run from the root directory of your app.**
 
 ### App
 Sets up a new AngularJS app, generating all the boilerplate you need to get started. The app generator also optionally installs Twitter Bootstrap and additional AngularJS modules, such as angular-resource.
 
+The chosen language will determine the default language used for subsequent generators like angular-ls:controller.
+
 Example:
 ```bash
-yo angular
+yo angular-ls --ls
 ```
 
 ### Route
@@ -53,7 +56,7 @@ Generates a controller and view, and configures a route in `app/scripts/app.js` 
 
 Example:
 ```bash
-yo angular:route myroute
+yo angular-ls:route myroute
 ```
 
 Produces `app/scripts/controllers/myroute.js`:
@@ -73,7 +76,7 @@ Generates a controller in `app/scripts/controllers`.
 
 Example:
 ```bash
-yo angular:controller user
+yo angular-ls:controller user
 ```
 
 Produces `app/scripts/controllers/user.js`:
@@ -87,7 +90,7 @@ Generates a directive in `app/scripts/directives`.
 
 Example:
 ```bash
-yo angular:directive myDirective
+yo angular-ls:directive myDirective
 ```
 
 Produces `app/scripts/directives/myDirective.js`:
@@ -108,7 +111,7 @@ Generates a filter in `app/scripts/filters`.
 
 Example:
 ```bash
-yo angular:filter myFilter
+yo angular-ls:filter myFilter
 ```
 
 Produces `app/scripts/filters/myFilter.js`:
@@ -125,7 +128,7 @@ Generates an HTML view file in `app/views`.
 
 Example:
 ```bash
-yo angular:view user
+yo angular-ls:view user
 ```
 
 Produces `app/views/user.html`:
@@ -138,7 +141,7 @@ Generates an AngularJS service.
 
 Example:
 ```bash
-yo angular:service myService
+yo angular-ls:service myService
 ```
 
 Produces `app/scripts/services/myService.js`:
@@ -151,11 +154,14 @@ angular.module('myMod').service('myService', function () {
 You can also do `yo angular:factory`, `yo angular:provider`, `yo angular:value`, and `yo angular:constant` for other types of services.
 
 ### Decorator
+
+THIS IS NOT WORKING YET.
+
 Generates an AngularJS service decorator.
 
 Example:
 ```bash
-yo angular:decorator serviceName
+yo angular-ls:decorator serviceName
 ```
 
 Produces `app/scripts/decorators/serviceNameDecorator.js`:
@@ -171,8 +177,8 @@ angular.module('myMod').config(function ($provide) {
 ## Options
 In general, these options can be applied to any generator, though they only affect generators that produce scripts.
 
-### CoffeeScript
-For generators that output scripts, the `--coffee` option will output CoffeeScript instead of JavaScript.
+### CoffeeScript and LiveScript
+For generators that output scripts, the `--coffee` or `--ls` option will output CoffeeScript or LiveScript instead of JavaScript. The dafult language is determined by the initial yo run.
 
 For example:
 ```bash
@@ -192,7 +198,7 @@ By default, generators produce unannotated code. Without annotations, AngularJS'
 
 #### Example
 ```bash
-yo angular:controller user --minsafe
+yo angular-ls:controller user --minsafe
 ```
 
 Produces `app/controller/user.js`:

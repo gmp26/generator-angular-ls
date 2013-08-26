@@ -64,7 +64,10 @@ var Generator = module.exports = function Generator(args, options) {
   });
 
   this.hookFor('angular-ls:controller', {
-    args: args
+    args: args,
+    options: {
+      options: this.options
+    }
   });
 
   if(this.options.ls) {
@@ -124,11 +127,10 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
       return props.lessBootstrap;
     }
   }], function (props) {
-    this.bootstrap = props.bootstrap;
-    this.compassBootstrap = props.compassBootstrap;
-    this.lessBootstrap = props.lessBootstrap;
-    this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
-    // console.log("sass="+this.compassBootstrap+ " less="+this.lessBootstrap);
+    this.options.bootstrap = this.bootstrap = props.bootstrap;
+    this.options.compassBootstrap = this.compassBootstrap = props.compassBootstrap;
+    this.options.lessBootstrap = this.lessBootstrap = props.lessBootstrap;
+    this.options.fontAwesome = this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
     cb();
   }.bind(this));
 };
