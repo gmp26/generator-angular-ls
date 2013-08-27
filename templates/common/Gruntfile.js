@@ -74,21 +74,21 @@ module.exports = function (grunt) {
     "regex-replace": {
       /* patch bootstrap to use font-awesome */
       bootsome: {
-        src: ['<%= yeoman.app %>/bower-components/bootstrap/less/bootstrap.less'],
+        src: ['<%%= yeoman.app %>/bower_components/bootstrap/less/bootstrap.less'],
         actions:[{
           name: 'font-awesome patch for bootstrap',
-          search: '@import "sprites\.less";',
+          search: '@import "sprites\\.less";',
           replace: '@import "../../font-awesome/less/font-awesome.less";',
-          flags: 'g'
+          flags: 'gm'
         }]
       },
       someboot: {
-        src: ['<%= yeoman.app %>/bower-components/font-awesome/less/variables.less'],
+        src: ['<%%= yeoman.app %>/bower_components/font-awesome/less/variables.less'],
         actions:[{
           name: 'bootstrap patch for font-awesome',
-          search: '@FontAwesomePath:\s*"\.\.\/font";',
-          replace: '@FontAwesomePath:    "../../bower_components/font-awesome/font";',
-          flags: 'g'
+          search: '@FontAwesomePath:\\s*"\\.\\.\\/font";',
+          replace: '@FontAwesomePath:    "bower_components/font-awesome/font";',
+          flags: 'gm'
         }]
       }
     },
