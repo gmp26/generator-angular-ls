@@ -5,6 +5,9 @@ angular.module('<%= _.camelize(appname) %>App')
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
-      'Karma'
+      'Karma',
+      '[Bootstrap-less or sass]',
+      '[Font-Awesome]',
+      '[Live or CoffeeScript]'
     ];
   }]);

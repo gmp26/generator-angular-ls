@@ -65,9 +65,6 @@ var Generator = module.exports = function Generator(args, options) {
 
   this.hookFor('angular-ls:controller', {
     args: args,
-    options: {
-      options: this.options
-    }
   });
 
   if(this.options.ls) {
@@ -127,27 +124,10 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
       return props.lessBootstrap;
     }
   }], function (props) {
-    var installed = this.options.installed = ['HTML5 Boilerplate', 'AngularJS', 'Karma'];
     this.options.bootstrap = this.bootstrap = props.bootstrap;
     this.options.compassBootstrap = this.compassBootstrap = props.compassBootstrap;
     this.options.lessBootstrap = this.lessBootstrap = props.lessBootstrap;
     this.options.fontAwesome = this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
-
-    var bs = '';
-    if(this.bootstrap)
-      bs += 'Bootstrap';
-    if(this.compassBootstrap)
-      bs += ' using sass/compass';
-    else if(this.lessBootstrap)
-      bs += ' using less/recess';
-    installed.push(bs);
-
-    if(this.fontAwesome)
-      installed.push('Font-awesome glyphs');
-    if(this.options.ls)
-      installed.push('LiveScript');
-    if(this.options.coffee)
-      installed.push('CoffeeScript');
     cb();
   }.bind(this));
 };
@@ -295,5 +275,5 @@ Generator.prototype.createIndexHtml = function createIndexHtml() {
 Generator.prototype.packageFiles = function () {
   this.template('../../templates/common/_bower.json', 'bower.json');
   this.template('../../templates/common/_package.json', 'package.json');
-  this.template('../../templates/common/Gruntfile.js', 'Gruntfile.js');
+  this.template('../../templates/common/Gruntfile.coffee', 'Gruntfile.coffee');
 };
