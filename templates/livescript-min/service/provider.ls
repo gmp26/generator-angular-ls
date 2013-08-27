@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('<%= _.camelize(appname) %>App')
-  .provider '<%= _.camelize(name) %>', [ ->
+  .provider '<%= _.camelize(name) %>', ->
 
     # Private variables
     salutation = 'Hello'
@@ -18,4 +18,3 @@ angular.module('<%= _.camelize(appname) %>App')
     # Method for instantiating
     this.$get = ->
       new Greeter()
-  ]

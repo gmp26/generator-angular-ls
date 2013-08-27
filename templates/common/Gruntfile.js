@@ -87,7 +87,7 @@ module.exports = function (grunt) {
         actions:[{
           name: 'bootstrap patch for font-awesome',
           search: '@FontAwesomePath:\\s*"\\.\\.\\/font";',
-          replace: '@FontAwesomePath:    "bower_components/font-awesome/font";',
+          replace: '@FontAwesomePath:    "./bower_components/font-awesome/font";',
           flags: 'gm'
         }]
       }

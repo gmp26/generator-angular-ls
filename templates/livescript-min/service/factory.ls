@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('<%= _.camelize(appname) %>App')
-  .factory '<%= _.camelize(name) %>', [ ->
+  .factory '<%= _.camelize(name) %>', ->
     # Service logic
     # ...
 
@@ -12,4 +12,3 @@ angular.module('<%= _.camelize(appname) %>App')
       someMethod: ->
         meaningOfLife;
     }
-  ]
