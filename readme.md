@@ -1,4 +1,3 @@
-
 Maintainer: [Mike Pearson](https://github.com/gmp26)
 
 Based on [angular-generator](https://github.com/yeoman/angular-generator/)
@@ -7,8 +6,7 @@ Based on [angular-generator](https://github.com/yeoman/angular-generator/)
 
 NB: Until things stabilise further I won't publish this as a node module, so to use you will
 have to git clone the repo, cd to it, and run `npm link`.
-The generator will then be available globally.
-
+The generator will then be available globally so skip the install step.
 
 Install `generator-angular-ls`:
 ```
