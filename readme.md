@@ -34,7 +34,7 @@ Available generators:
 * [angular-ls:filter](#filter)
 * [angular-ls:route](#route)
 * [angular-ls:service](#service)
-* [angular-ls:decorator] (#decorator)
+* [angular-ls:decorator] (#decorator) - tests fail on this. If you know why, please send a pull request.
 * [angular-ls:view](#view)
 
 **Note: Generators are to be run from the root directory of your app.**
@@ -153,7 +153,7 @@ You can also do `yo angular:factory`, `yo angular:provider`, `yo angular:value`,
 
 ### Decorator
 
-THIS IS NOT WORKING YET.
+THIS IS NOT WORKING YET - tests fail. If you know why, please send a pull request.
 
 Generates an AngularJS service decorator.
 
