@@ -109,6 +109,14 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     }
   }, {
     type: 'confirm',
+    name: 'responsive',
+    message: 'Would you like to use the Bootstrap responsive CSS?',
+    default: true,
+    when: function (props) {
+      return props.lessBootstrap;
+    }
+  }, {
+    type: 'confirm',
     name: 'compassBootstrap',
     message: 'Would you like to use the SCSS version of Twitter Bootstrap with the Compass CSS Authoring Framework?',
     default: true,
@@ -127,6 +135,7 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     this.options.bootstrap = this.bootstrap = props.bootstrap;
     this.options.compassBootstrap = this.compassBootstrap = props.compassBootstrap;
     this.options.lessBootstrap = this.lessBootstrap = props.lessBootstrap;
+    this.options.responsive = this.responsive = props.responsive;
     this.options.fontAwesome = this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
     cb();
   }.bind(this));
