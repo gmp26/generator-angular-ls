@@ -2,6 +2,17 @@ Maintainer: [Mike Pearson](https://github.com/gmp26)
 
 Based on [angular-generator](https://github.com/yeoman/angular-generator/)
 
+This generator adds the following options
+
+* [LiveScript](http://livescript.net) as an alternative to Javascript or Coffeescript,
+* Bootstrap with Less/Recess as an alternative to Sass/Compass. This is useful if you 
+  want to use angular-ui/bootstrap,
+* Font-awesome instead of glyphicons.
+
+It is tested most extensively with these
+options enabled.
+
+
 ## Provisional Usage
 
 NB: Until things stabilise further I won't publish this as a node module, so to use you will

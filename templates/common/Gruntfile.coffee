@@ -191,8 +191,8 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: 'test/spec'
-          src: '{,*/}*.ls',
-          dest: '<%%= yeoman.tmp %>/spec',
+          src: '{,*/}*.ls'
+          dest: '<%%= yeoman.tmp %>/spec'
           ext: '.js'
         ]
 
@@ -415,7 +415,7 @@ module.exports = (grunt) ->
     'concurrent:test'
     'autoprefixer'
     'connect:test'
-    'karma'
+    'karma:unit'
   ])
 
   grunt.registerTask('build', [
