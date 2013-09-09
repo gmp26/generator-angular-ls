@@ -125,6 +125,11 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     }
   }, {
     type: 'confirm',
+    name: 'jquery',
+    message: 'Would you like to include jQuery. (Angular supplies jqLite.)',
+    default: true
+  }, {
+    type: 'confirm',
     name: 'fontAwesome',
     message: 'Would you like to use fontAwesome glyphs in Bootstrap?',
     default: true,
@@ -137,6 +142,7 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     this.options.lessBootstrap = this.lessBootstrap = props.lessBootstrap;
     this.options.responsive = this.responsive = props.responsive;
     this.options.fontAwesome = this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
+    this.options.jquery = this.jquery = props.jquery;
     cb();
   }.bind(this));
 };
@@ -189,7 +195,7 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
   console.log("Ho THERE sass="+sass+ " less="+less);
 
   var mainCss = 'main.' + (sass ? 'scss' : 'less');
-  var images = sass? 'images' : 'img';   
+  var images = sass? 'images' : 'img';
   if (sass || less) {
     files.push(mainCss);
     this.copy('images/glyphicons-halflings.png', 'app/'+images+'/glyphicons-halflings.png');
@@ -226,9 +232,9 @@ Generator.prototype.bootstrapJS = function bootstrapJS() {
   var pfix = 'bower_components/bootstrap';
   if( this.lessBootstrap ) {
     pfix += '/js/bootstrap-';
-  }    
+  }
   else {
-    pfix += '-sass/js/bootstrap-';    
+    pfix += '-sass/js/bootstrap-';
   }
   this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
     pfix + 'affix.js',

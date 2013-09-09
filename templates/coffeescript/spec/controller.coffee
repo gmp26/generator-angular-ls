@@ -16,5 +16,5 @@ describe 'Controller: <%= _.classify(name) %>Ctrl', () ->
     }
 
   it 'should attach a list of awesomeThings to the scope', () ->
-    expect(scope.awesomeThings.length).toBe(6)
+    expect(scope.awesomeThings.length).toBe(7)
 

@@ -9,4 +9,5 @@ angular.module '<%= _.camelize(appname) %>App'
       '[Bootstrap-less or sass]'
       '[Font-Awesome]'
       '[Live or CoffeeScript]'
+      '[jQuery]'
     ]

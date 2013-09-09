@@ -8,6 +8,7 @@ angular.module('<%= _.camelize(appname) %>App')
       'Karma',
       '[Bootstrap-less or sass]',
       '[Font-Awesome]',
-      '[Live or CoffeeScript]'
+      '[Live or CoffeeScript]',
+      '[jQuery]'
     ];
   }]);

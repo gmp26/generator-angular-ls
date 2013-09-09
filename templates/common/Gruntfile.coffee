@@ -177,7 +177,7 @@ module.exports = (grunt) ->
         # sourceMap: true
         # sourceRoot: ''
         bare: true
-      
+
       dist:
         files: [
           expand: true
@@ -314,7 +314,15 @@ module.exports = (grunt) ->
           src: [
             '*.{ico,png,txt}'
             '.htaccess',
-            'bower_components/**/*'
+<% if (jquery) { %>
+            'bower_components/jquery/jquery.js'
+<% } %>
+            'bower_components/angular*/**/*.js'
+            '!bower_components/angular*/**/*.min.js'
+            '!bower_components/angular*/angular-mocks/*.js'
+            'bower_components/font-awesome/font/*'
+            'bower_components/es5-shim/es5-shim.js'
+            'bower_components/json3/lib/json3.min.js'
             'images/{,*/}*.{gif,webp}'
             'styles/fonts/*'
           ]
@@ -393,6 +401,17 @@ module.exports = (grunt) ->
           '<%%= yeoman.dist %>/scripts/scripts.js': [
             '<%%= yeoman.dist %>/scripts/scripts.js'
           ]
+
+    rsync:
+      options:
+        args: ["--verbose", "--archive"]
+        exclude: [".git*", "node_modules", ".htaccess"]
+        recursive: true
+      publish:
+        options:
+          src: 'dist/'
+          dest: '/www/nrich/html/reactionTimerApp'
+          host: 'maths.org'
   )
 
   grunt.registerTask('server', (target) ->
