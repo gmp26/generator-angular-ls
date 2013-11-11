@@ -198,8 +198,10 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
   var images = sass? 'images' : 'img';
   if (sass || less) {
     files.push(mainCss);
-    this.copy('images/glyphicons-halflings.png', 'app/'+images+'/glyphicons-halflings.png');
-    this.copy('images/glyphicons-halflings-white.png', 'app/'+images+'/glyphicons-halflings-white.png');
+    if(!this.fontAwesome) {
+      this.copy('images/glyphicons-halflings.png', 'app/'+images+'/glyphicons-halflings.png');
+      this.copy('images/glyphicons-halflings-white.png', 'app/'+images+'/glyphicons-halflings-white.png');
+    }
   }
   else {
     if (this.bootstrap) {
@@ -236,21 +238,24 @@ Generator.prototype.bootstrapJS = function bootstrapJS() {
   else {
     pfix += '-sass/js/bootstrap-';
   }
-  this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-    pfix + 'affix.js',
-    pfix + 'alert.js',
-    pfix + 'dropdown.js',
-    pfix + 'tooltip.js',
-    pfix + 'modal.js',
-    pfix + 'transition.js',
-    pfix + 'button.js',
-    pfix + 'popover.js',
-    pfix + 'typeahead.js',
-    pfix + 'carousel.js',
-    pfix + 'scrollspy.js',
-    pfix + 'collapse.js',
-    pfix + 'tab.js'
-  ]);
+  if(this.jquery) {
+    // skip bootstrap javascript, but pull in angular-ui instead
+    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
+      pfix + 'affix.js',
+      pfix + 'alert.js',
+      pfix + 'dropdown.js',
+      pfix + 'tooltip.js',
+      pfix + 'modal.js',
+      pfix + 'transition.js',
+      pfix + 'button.js',
+      pfix + 'popover.js',
+      pfix + 'typeahead.js',
+      pfix + 'carousel.js',
+      pfix + 'scrollspy.js',
+      pfix + 'collapse.js',
+      pfix + 'tab.js'
+    ]);
+  }
 };
 
 Generator.prototype.extraModules = function extraModules() {
