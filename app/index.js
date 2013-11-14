@@ -128,6 +128,11 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     name: 'jquery',
     message: 'Would you like to include jQuery. (Angular supplies jqLite.)',
     default: true
+  },  {
+    type: 'confirm',
+    name: 'angularUIBootstrap',
+    message: 'Would you like to include Angular-UI/Bootstrap rather than Bootstrap javascript?',
+    default: true
   }, {
     type: 'confirm',
     name: 'fontAwesome',
@@ -143,6 +148,7 @@ Generator.prototype.askForBootstrap = function askForBootstrap() {
     this.options.responsive = this.responsive = props.responsive;
     this.options.fontAwesome = this.fontAwesome = this.lessBootstrap ? props.fontAwesome : false;
     this.options.jquery = this.jquery = props.jquery;
+    this.options.angularUIBootstrap = this.angularUIBootstrap = props.angularUIBootstrap;
     cb();
   }.bind(this));
 };
@@ -230,31 +236,38 @@ Generator.prototype.bootstrapJS = function bootstrapJS() {
     return;  // Skip if disabled.
   }
 
-  // Wire Twitter Bootstrap plugins
-  var pfix = 'bower_components/bootstrap';
-  if( this.lessBootstrap ) {
-    pfix += '/js/bootstrap-';
+  if(this.angularUIBootstrap) {
+    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
+      // Wire in angular ui/bootstrap
+      'bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js'
+    ]);
   }
   else {
-    pfix += '-sass/js/bootstrap-';
-  }
-  if(this.jquery) {
-    // skip bootstrap javascript, but pull in angular-ui instead
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      pfix + 'affix.js',
-      pfix + 'alert.js',
-      pfix + 'dropdown.js',
-      pfix + 'tooltip.js',
-      pfix + 'modal.js',
-      pfix + 'transition.js',
-      pfix + 'button.js',
-      pfix + 'popover.js',
-      pfix + 'typeahead.js',
-      pfix + 'carousel.js',
-      pfix + 'scrollspy.js',
-      pfix + 'collapse.js',
-      pfix + 'tab.js'
-    ]);
+    // Wire Twitter Bootstrap plugins
+    pfix = 'bower_components/bootstrap';
+    if( this.lessBootstrap ) {
+      pfix += '/js/bootstrap-';
+    }
+    else {
+      pfix += '-sass/js/bootstrap-';
+    }
+    if(this.jquery) {
+      this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
+        pfix + 'affix.js',
+        pfix + 'alert.js',
+        pfix + 'dropdown.js',
+        pfix + 'tooltip.js',
+        pfix + 'modal.js',
+        pfix + 'transition.js',
+        pfix + 'button.js',
+        pfix + 'popover.js',
+        pfix + 'typeahead.js',
+        pfix + 'carousel.js',
+        pfix + 'scrollspy.js',
+        pfix + 'collapse.js',
+        pfix + 'tab.js'
+      ]);
+    }
   }
 };
 
