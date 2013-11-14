@@ -47,6 +47,7 @@ module.exports = (grunt) ->
         files: ['.tmp/scripts/{,*/}*.js','.tmp/spec/{,*/}*.js']
         tasks: ['karma:unit:run']
 
+<% if (lessBootstrap) { %>
       recess:
         files: ['<%%= yeoman.app %>/styles/{,*/}*.less']
         tasks: ['recess']
