@@ -1,10 +1,10 @@
 'use strict'
 
-angular.module '<%= _.camelize(appname) %>App', ['ngRoute']
+angular.module '<%= _.camelize(appname) %>App' <[ ngRoute mainController ]>
   .config <[$routeProvider]> ++ ($routeProvider) ->
     $routeProvider.when '/', {
       templateUrl: 'views/main.html'
-      controller: 'MainCtrl'
+      controller: 'MainController'
     }
     .otherwise {
       redirectTo: '/'
