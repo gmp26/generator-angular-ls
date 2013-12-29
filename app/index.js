@@ -23,37 +23,32 @@ var Generator = module.exports = function Generator(args, options) {
 
   this.appPath = this.env.options.appPath;
 
-  if (typeof this.env.options.coffee === 'undefined') {
-    this.option('coffee');
+  // if (typeof this.env.options.coffee === 'undefined') {
+  //   this.option('coffee');
 
-    // attempt to detect if user is using CS or not
-    // if cml arg provided, use that; else look for the existence of cs
-    if (!this.options.coffee &&
-      this.expandFiles(path.join(this.appPath, '/scripts/**/*.coffee'), {}).length > 0) {
-      this.options.coffee = true;
-    }
+  //   // attempt to detect if user is using CS or not
+  //   // if cml arg provided, use that; else look for the existence of cs
+  //   if (!this.options.coffee &&
+  //     this.expandFiles(path.join(this.appPath, '/scripts/**/*.coffee'), {}).length > 0) {
+  //     this.options.coffee = true;
+  //   }
 
-    this.env.options.coffee = this.options.coffee;
-  }
+  //   this.env.options.coffee = this.options.coffee;
+  // }
 
-  if (typeof this.env.options.ls === 'undefined') {
-    this.option('ls');
+  this.option('ls');
+  this.options.ls = true;
+  this.env.options.ls = this.options.ls;
+  
+  this.option('minsafe');
+  this.options.minsafe = true;
+  this.env.options.minsafe = this.options.minsafe;
 
-    // attempt to detect if user is using CS or not
-    // if cml arg provided, use that; else look for the existence of cs
-    if (!this.options.ls &&
-      this.expandFiles(path.join(this.appPath, '/scripts/**/*.ls'), {}).length > 0) {
-      this.options.ls = true;
-    }
-
-    this.env.options.ls = this.options.ls;
-  }
-
-  if (typeof this.env.options.minsafe === 'undefined') {
-    this.option('minsafe');
-    this.env.options.minsafe = this.options.minsafe;
-    args.push('--minsafe');
-  }
+  // if (typeof this.env.options.minsafe === 'undefined') {
+  //   this.option('minsafe');
+  //   this.env.options.minsafe = this.options.minsafe;
+  //   args.push('--minsafe');
+  // }
 
   this.hookFor('angular-ls:common', {
     args: args
@@ -67,20 +62,8 @@ var Generator = module.exports = function Generator(args, options) {
     args: args,
   });
 
-  if(this.options.ls) {
-    this.template('../../templates/common/_karma.conf.js', 'karma.conf.js');
-    this.template('../../templates/common/_karma-e2e.conf.js', 'karma-e2e.conf.js');
-  }
-  else this.hookFor('karma', {
-    as: 'app',
-    options: {
-      options: {
-        coffee: this.options.coffee,
-        travis: true,
-        'skip-install': this.options['skip-install']
-       }
-    }
-  });
+  this.template('../../templates/common/_karma.conf.js', 'karma.conf.js');
+  this.template('../../templates/common/_karma-e2e.conf.js', 'karma-e2e.conf.js');
 
   this.on('end', function () {
     this.installDependencies({ skipInstall: this.options['skip-install'] });

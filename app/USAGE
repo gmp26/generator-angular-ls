@@ -1,19 +1,18 @@
 Description:
-    Creates a default AngularJS app
+    Creates a default AngularJS app in LiveScript
 
 Example:
-    yo angular [--coffee] [--ls] [--minsafe]
+    yo angular-ls [--minsafe]
 
     This will create:
-        Gruntfile.js
+        Gruntfile.coffee
         bower.json
 
         app/index.html
-        app/scripts/your-app-name-here.js
-        app/scripts/controllers/main.js
-        app/bower_components/angular/angular.js
+        app/scripts/your-app-name-here.ls
+        app/scripts/controllers/main.ls
+        app/bower_components/angular/angular.ls
         app/styles/main.css
         app/views/main.html
 
-        test/lib/angular-mocks.js
-        test/spec/controllers/main.js
+        test/spec/controllers/main.ls
