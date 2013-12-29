@@ -2,9 +2,8 @@ Maintainer: [Mike Pearson](https://github.com/gmp26)
 
 Based on [angular-generator](https://github.com/yeoman/angular-generator/)
 
-This generator adds the following options
+This generator produces a base Angular project in [LiveScript](http://Livescript.net).
 
-* [LiveScript](http://livescript.net) as an alternative to Javascript or Coffeescript,
 * Bootstrap with Less/Recess as an alternative to Sass/Compass. This is useful if you 
   want to use angular-ui/bootstrap,
 * Font-awesome instead of glyphicons.
@@ -29,10 +28,9 @@ Make a new directory, and `cd` into it:
 mkdir my-new-project && cd $_
 ```
 
-Run `yo angular-ls`, optionally passing an app name. If you want coffeescript or livescript, also
-pass the --coffee or the --ls language flag.
+Run `yo angular-ls`, optionally passing an app name. 
 ```
-yo angular-ls [app-name] [(--coffee)|(--ls)]
+yo angular-ls [app-name]
 ```
 
 ## Generators
@@ -53,11 +51,9 @@ Available generators:
 ### App
 Sets up a new AngularJS app, generating all the boilerplate you need to get started. The app generator also optionally installs Twitter Bootstrap and additional AngularJS modules, such as angular-resource.
 
-The chosen language will determine the default language used for subsequent generators like angular-ls:controller.
-
 Example:
 ```bash
-yo angular-ls --ls
+yo angular-ls
 ```
 
 ### Route
@@ -69,9 +65,10 @@ yo angular-ls:route myroute
 ```
 
 Produces `app/scripts/controllers/myroute.js`:
-```javascript
-angular.module('myMod').controller('MyrouteCtrl', function ($scope) {
-  // ...
+```livescript
+angular.module 'myrouteController' []
+  .controller 'MyrouteController', <[$scope]> ++ ($scope) ->
+    ...
 });
 ```
 
@@ -88,31 +85,28 @@ Example:
 yo angular-ls:controller user
 ```
 
-Produces `app/scripts/controllers/user.js`:
-```javascript
-angular.module('myMod').controller('UserCtrl', function ($scope) {
-  // ...
-});
+Produces `app/scripts/controllers/user.js`
+```livescript
+angular.module 'userController' []
+  .controller 'UserController', <[$scope]> ++ ($scope) ->
+    ...
 ```
 ### Directive
 Generates a directive in `app/scripts/directives`.
 
 Example:
 ```bash
-yo angular-ls:directive myDirective
+yo angular-ls:directive foo
 ```
 
-Produces `app/scripts/directives/myDirective.js`:
-```javascript
-angular.module('myMod').directive('myDirective', function () {
-  return {
-    template: '<div></div>',
-    restrict: 'E',
-    link: function postLink(scope, element, attrs) {
-      element.text('this is the myDirective directive');
-    }
-  };
-});
+Produces `app/scripts/directives/foo.js`:
+```livescript
+angular.module 'fooDirective' []
+  .directive 'foo', <[]> ++ ->
+    template: '<div></div>'
+    restrict: 'E'
+    link: (scope, element, attrs) ->
+      element.text 'this is the foo directive'
 ```
 
 ### Filter
@@ -120,16 +114,15 @@ Generates a filter in `app/scripts/filters`.
 
 Example:
 ```bash
-yo angular-ls:filter myFilter
+yo angular-ls:filter foo
 ```
 
-Produces `app/scripts/filters/myFilter.js`:
-```javascript
-angular.module('myMod').filter('myFilter', function () {
-  return function (input) {
-    return 'myFilter filter:' + input;
-  };
-});
+Produces `app/scripts/filters/myFilter.js`. 
+```livescript
+angular.module 'fooFilter' []
+  .filter 'foo', <[]> ++ ->
+    (input) ->
+      'foo filter: ' + input
 ```
 
 ### View
@@ -154,10 +147,12 @@ yo angular-ls:service myService
 ```
 
 Produces `app/scripts/services/myService.js`:
-```javascript
-angular.module('myMod').service('myService', function () {
-  // ...
-});
+```livescript
+angular.module('fooService') []
+  .service 'Foo', <[]> ++ ->
+    # AngularJS will instantiate a singleton by calling "new" on this function
+
+
 ```
 
 You can also do `yo angular:factory`, `yo angular:provider`, `yo angular:value`, and `yo angular:constant` for other types of services.
@@ -170,73 +165,30 @@ Generates an AngularJS service decorator.
 
 Example:
 ```bash
-yo angular-ls:decorator serviceName
+yo angular-ls:decorator fooService
 ```
 
 Produces `app/scripts/decorators/serviceNameDecorator.js`:
-```javascript
-angular.module('myMod').config(function ($provide) {
-    $provide.decorator('serviceName', function ($delegate) {
-      // ...
-      return $delegate;
-    });
-  });
+```livescript
+angular.module 'fooServiceDecorator' []
+  .config <[$provide]> ++ ($provide) ->
+    $provide.decorator "fooService", ($delegate) ->
+      # decorate the $delegate
+      $delegate
 ```
 
 ## Options
 In general, these options can be applied to any generator, though they only affect generators that produce scripts.
 
-### CoffeeScript and LiveScript
-For generators that output scripts, the `--coffee` or `--ls` option will output CoffeeScript or LiveScript instead of JavaScript. The dafult language is determined by the initial yo run.
-
-For example:
-```bash
-yo angular:controller user --coffee
-```
-
-Produces `app/scripts/controller/user.coffee`:
-```coffeescript
-angular.module('myMod')
-  .controller 'UserCtrl', ($scope) ->
-```
-
-A project can mix CoffeScript and JavaScript files.
 
 ### Minification Safe
-By default, generators produce unannotated code. Without annotations, AngularJS's DI system will break when minified. Typically, these annotations the make minification safe are added automatically at build-time, after application files are concatenated, but before they are minified. By providing the `--minsafe` option, the code generated will out-of-the-box be ready for minification. The trade-off is between amount of boilerplate, and build process complexity.
+`generator-angular-ls` always produces minification-safe code. It does this by prefixing the `<[]> ++` to any function `->` that may inject modules. Edit this code to reflect the modules you need. e.g.
 
-#### Example
-```bash
-yo angular-ls:controller user --minsafe
+```livescript
+angular.module 'fooFilter' []
+  .filter <[$window $log]> ++ ($window, $log) ->
+    # filter which depends on $window and $log
 ```
-
-Produces `app/controller/user.js`:
-```javascript
-angular.module('myMod').controller('UserCtrl', ['$scope', function ($scope) {
-  // ...
-}]);
-```
-
-#### Background
-Unannotated:
-```javascript
-angular.module('myMod').controller('MyCtrl', function ($scope, $http, myService) {
-  // ...
-});
-```
-
-Annotated:
-```javascript
-angular.module('myMod').controller('MyCtrl',
-  ['$scope', '$http', 'myService', function ($scope, $http, myService) {
-
-    // ...
-  }]);
-```
-
-The annotations are important because minified code will rename variables, making it impossible for AngularJS to infer module names based solely on function parameters.
-
-The recommended build process uses `ngmin`, a tool that automatically adds these annotations. However, if you'd rather not use `ngmin`, you have to add these annotations manually yourself.
 
 ## Bower Components
 
@@ -285,6 +237,8 @@ bower install angular-mocks
 ```
 
 By running `grunt test` you should now be able to run your unit tests with karma.
+
+Note that karma will not run any tests until a file has been touched.
 
 ## Contribute
 
